@@ -180,3 +180,68 @@ function kode_jenis($kode)
 
 	return isset($data[$kode]) ? $data[$kode] : '';
 }
+
+function tgl_indo($date)
+{
+	if ($date != '') {
+		$hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+		$week = date('w', strtotime($date));
+
+		return $hari[$week].', '.custom_date_format($date, 'Y-m-d', 'd/m/Y');
+	} 
+
+	return '-';
+}
+
+function split_string_number($string) 
+{
+	return preg_split('#(?<=\d)(?=[a-z])#i', $string);
+}
+
+function generate_barcode($text)
+{
+	$ci =& get_instance();
+	$ci->load->library('zend');
+    $ci->zend->load('Zend/Barcode');
+
+    $image_resource = Zend_Barcode::factory('code128', 'image', ['text' => $text, 'drawText' => false], [])->draw();
+	$image_name     = str_replace('/', '', $text).'.jpg';
+    $image_dir      = './assets/qrcode/';
+
+    imagejpeg($image_resource, $image_dir.$image_name);
+}
+
+function img_to_base64($img)
+{
+	$type = pathinfo($img, PATHINFO_EXTENSION);
+	$data = file_get_contents($img);
+	$base64 = 'data:image/'. $type .';base64,' . base64_encode($data);
+
+	return $base64;
+}
+
+function generate_qrcode($teks)
+{
+	$ci =& get_instance();
+
+	$ci->load->library('ciqrcode');
+	$config['cacheable'] = true; //boolean, the default is true
+    $config['cachedir'] = './assets/'; //string, the default is application/cache/
+    $config['errorlog'] = './assets/'; //string, the default is application/logs/
+    $config['imagedir'] = './assets/qrcode/'; //direktori penyimpanan qr code
+    $config['quality'] = true; //boolean, the default is true
+    $config['size'] = '1024'; //interger, the default is 1024
+    $config['black'] = array(224,255,255); // array, default is array(255,255,255)
+    $config['white'] = array(70,130,180); // array, default is array(0,0,0)
+    $ci->ciqrcode->initialize($config);
+
+    $image_name = md5($teks).'.png';
+    $params['data'] = $teks;
+    $params['level'] = 'H'; //H=High
+    $params['size'] = 10;
+    $params['savename'] = FCPATH.$config['imagedir'].$image_name; //simpan image QR CODE ke folder assets/images/
+
+    $ci->ciqrcode->generate($params); // fungsi untuk generate QR CODE
+
+    return $image_name;
+}
