@@ -1,10 +1,5 @@
 <?php  
-    $current_menu = $this->Menu_Model->current_menu();
     $title = isset($title) ? $title : '';
-
-    $username = $this->session->userdata('username');
-    $data_user = $this->Login_model->get_user_profile($username);
-
     $profile_name = isset($data_user->profile_name) ? $data_user->profile_name : '';
 ?>
 <!DOCTYPE html>
@@ -21,15 +16,13 @@
     <meta name="msapplication-navbutton-color" content="#0f5934">
     <meta name="apple-mobile-web-app-status-bar-style" content="#0f5934">
     <!-- Google Font: Source Sans Pro -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/fontawesome-free/css/all.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- iCheck -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/jqvmap/jqvmap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/adminlte.min.css">
     <!-- overlayScrollbars -->
@@ -40,10 +33,6 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/summernote/summernote-bs4.css">
     <!-- Sweet Alert -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
-    <!-- Datatables -->
-    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-buttons/css/buttons.bootstrap.min.css">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.min.css">
     <!-- Toastr -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/toastr/toastr.min.css">
     <!-- Default Theme -->
@@ -57,6 +46,14 @@
             background: aquamarine;
         }
     </style>
+    <?php 
+        $style = isset($style) ? $style : [];
+        if ($style) {
+            for ($i = 0; $i < count($style); $i++) {
+                echo '<link rel="stylesheet" href="'.base_url($style[$i]).'">';
+            }
+        }
+    ?>
 
     <?= isset($css) ? $css : ''; ?>
 </head>
@@ -136,7 +133,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column text-sm nav-flat nav-compact" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-                        <?php echo $this->Menu_Model->create_menu(); ?>
+                        <?= isset($menu) ? $menu : ''; ?>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

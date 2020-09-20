@@ -31,19 +31,16 @@ class Login_model extends CI_Model {
 			if ($cookie <> '') {
 				$cari = $this->db->where([
 					'session' => $cookie
-				])
-				->get('admin')
-				->row();
+				])->get('admin')->row();
 
 				if ($cari) {
 					$username = isset($cari->username) ? $cari->username : '';
 					if ($username != '') {
 						$random = rand();
 						$session = md5($random);
-						$this->db->query("
-							UPDATE tb_user 
-							SET session = '$session' 
-							WHERE username = '$username'");
+
+						$this->db->where(['username' => $username])
+							->update('tb_user', ['session' => $session]);
 
 						set_cookie('auth-login', $session, 36000);
 
@@ -65,21 +62,18 @@ class Login_model extends CI_Model {
 	public function login($username = '', $password = '')
 	{
 		$password = md5($password.'&fk_project*123#');
-		$is_login = $this->db->query("
-				SELECT * 
-				FROM tb_user a 
-				WHERE a.username = '$username' 
-				AND a.password = '$password'
-				AND a.status = 1 ")->row();
+		$is_login = $this->db->where([
+			'username' => $username, 
+			'password' => $password, 
+			'status' => 1
+		])->get('tb_user')->row();
 
 		if ($is_login) {
 			$random = rand();
 			$session = md5($random);
 
-			$this->db->query("
-				UPDATE tb_user 
-				SET session = '$session', last_login = NOW()
-				WHERE username = '$username'");
+			$sql = "UPDATE tb_user SET session = ?, last_login = NOW() WHERE username = ?";
+			$this->db->query($sql, [$session, $username]);
 
 			return [
 				'language' => $is_login->language,
@@ -106,9 +100,10 @@ class Login_model extends CI_Model {
 			SELECT a.*
 			FROM tb_user_menu a
 			INNER JOIN tb_menu b ON a.`id_menu` = b.id
-			WHERE a.`username` = '$username'
-			AND b.`method` = '$method'
-			AND b.`fungsi` = '$fungsi' ")->row();
+			WHERE a.`username` = ?
+			AND b.`method` = ?
+			AND b.`fungsi` = ? ", 
+		[$username, $method, $fungsi])->row();
 
 		return ($data) ? $data : false;
 	}

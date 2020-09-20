@@ -26,7 +26,9 @@ class Main extends MY_Controller {
 			'js' => ['assets/js/apps/dashboard.js']
 		];
 
-		$this->template($header, $body, $footer);
+		$plugins = ['datatables'];
+
+		$this->template($header, $body, $footer, $plugins);
 	}
 
 	public function switch_language($language = '') 

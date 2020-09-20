@@ -17,9 +17,9 @@ class Main_Model extends CI_Model {
 		$number = 1;
 		if ($last) {
 			$number = $last->$kolom + 1;
-			$this->db->query(" UPDATE $tabel SET $kolom = '$number' WHERE periode = '$periode' ");
+			$this->db->query(" UPDATE $tabel SET $kolom = ? WHERE periode = ? ", [$number, $periode]);
 		} else {
-			$this->db->query(" INSERT INTO $tabel ($kolom, periode) VALUES (1, '$periode') ");
+			$this->db->query(" INSERT INTO $tabel ($kolom, periode) VALUES (1, ?) ", [$periode]);
 		}
 
 		$autonumber = '';
@@ -43,7 +43,7 @@ class Main_Model extends CI_Model {
 
 	public function get_time($format)
 	{
-		$sql = $this->db->query("SELECT DATE_FORMAT(NOW(), '$format') AS hasil ")->row();
+		$sql = $this->db->query("SELECT DATE_FORMAT(NOW(), ?) AS hasil ", [$format])->row();
 
 		return isset($sql->hasil) ? $sql->hasil : '';
 	}

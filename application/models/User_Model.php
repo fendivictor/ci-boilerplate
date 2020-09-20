@@ -14,15 +14,20 @@ class User_Model extends CI_Model {
 		$sql = $this->db->query("
 				SELECT * 
 				FROM tb_user a 
-				WHERE a.username = '$username' 
-				AND a.password = MD5('$password')
-				AND a.status = 1 ")->row();
+				WHERE a.username = ? 
+				AND a.password = MD5(?)
+				AND a.status = 1 ", [$username, $password])->row();
 
 		return ($sql) ? true : false;
 	}
 
 	public function change_password($username, $password, $profile_name = '', $bahasa = '')
 	{
+		$username = $this->db->escape_str($username);
+		$password = $this->db->escape_str($password);
+		$profile_name = $this->db->escape_str($profile_name);
+		$bahasa = $this->db->escape_str($bahasa);
+
 		$update_colom = '';
 		if ($password != '') {
 			$password = $password.'&fk_project*123#';
@@ -82,9 +87,9 @@ class User_Model extends CI_Model {
 			LEFT JOIN (
 				SELECT c.*
 				FROM tb_privilege c
-				WHERE c.username = '$username'
+				WHERE c.username = ?
 			) AS c ON c.tools = b.tools
-			WHERE a.`status` = 1 ")->result();
+			WHERE a.`status` = 1 ", [$username])->result();
 	}
 
 	public function add_privilege($data, $username)

@@ -1,3 +1,4 @@
+/*
 $(document).ready(function() {
 	const type = ['delivery', 'process', 'shipment', 'finish'];
 	const config = {
@@ -99,3 +100,4 @@ $(document).ready(function() {
 		columnDefs: columnDefinition.default
 	});
 });
+*/

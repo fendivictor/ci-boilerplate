@@ -21,10 +21,10 @@ class Menu_Model extends CI_Model {
 				GROUP BY b.`parent`
 			) AS menu ON menu.parent = a.`id`
 			INNER JOIN tb_user_menu c ON a.id = c.id_menu
-			WHERE a.parent = '$parent' 
+			WHERE a.parent = ? 
 			AND a.status = 1
-			AND c.username = '$username'
-			ORDER BY a.urutan ASC")->result_array();
+			AND c.username = ?
+			ORDER BY a.urutan ASC", [$parent, $username])->result_array();
 	}
 
 	public function create_menu()
@@ -142,12 +142,12 @@ class Menu_Model extends CI_Model {
 			LEFT JOIN (
 				SELECT *
 				FROM tb_user_menu d
-				WHERE d.`username` = '$username'
+				WHERE d.`username` = ?
 			) AS e ON e.id_menu = a.`id`
 			WHERE a.`status` = 1
 			AND a.`icon` <> ''
-			AND a.`parent` = '$parent'
-			ORDER BY a.`urutan` ASC ")->result();
+			AND a.`parent` = ?
+			ORDER BY a.`urutan` ASC ", [$username, $parent])->result();
 	}
 
 	public function create_json_jstree($parent = 0, $username = '')
