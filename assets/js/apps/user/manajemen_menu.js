@@ -6,6 +6,8 @@ $(document).ready(function(){
 			dataType: 'json'
 		}
 
+		blockUI();
+
 		$.ajax(config)
 		.done(function(data) {
 			$('#jstree-menu').jstree("destroy");
@@ -25,10 +27,13 @@ $(document).ready(function(){
                         icon: "fa fa-file icon-state-warning icon-lg"
                     }
                 }
-            });
+			});
+			
+			unBlockUI();
 		})
 		.fail(function(e) {
 			toastr.error('Terjadi kesalahan saat memuat data');
+			unBlockUI();
 		});
 	}
 

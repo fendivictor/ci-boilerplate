@@ -46,34 +46,12 @@
     </script>
     <!-- Bootstrap 4 -->
     <script src="<?= base_url() ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- ChartJS -->
-    <script src="<?= base_url() ?>assets/plugins/chart.js/Chart.min.js"></script>
-    <script src="<?= base_url() ?>assets/plugins/chart.js/Chart.datalabels.js"></script>
-    <!-- Sparkline -->
-    <script src="<?= base_url() ?>assets/plugins/sparklines/sparkline.js"></script>
-    <!-- daterangepicker -->
     <script src="<?= base_url() ?>assets/plugins/moment/moment.min.js"></script>
-    <script src="<?= base_url() ?>assets/plugins/daterangepicker/daterangepicker.js"></script>
-    <!-- Summernote -->
-    <script src="<?= base_url() ?>assets/plugins/summernote/summernote-bs4.min.js"></script>
-    <!-- overlayScrollbars -->
     <script src="<?= base_url() ?>assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
     <script src="<?= base_url() ?>assets/js/adminlte.min.js"></script>
-    <script src="<?= base_url() ?>assets/plugins/datatables/jquery.dataTables.js"></script>
-    <script src="<?= base_url() ?>assets/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
-    <!-- Block UI -->
     <script src="<?= base_url() ?>assets/plugins/blockui/blockui.js"></script>
-    <!-- SweetAlert2 -->
     <script src="<?= base_url() ?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <!-- Datepicker -->
-    <script src="<?= base_url() ?>assets/plugins/datepicker/script.min.js"></script>
-
     <script src="<?= base_url() ?>assets/plugins/toastr/toastr.min.js"></script>
-    <script src="<?= base_url() ?>assets/plugins/jstree/jstree.min.js"></script>
-    <!-- Dropzone -->
-    <script src="<?= base_url() ?>assets/plugins/dropzone/min/dropzone.min.js"></script>
-    <script src="<?= base_url() ?>assets/js/apps/core.js"></script>
     <?php 
         $plugin = isset($plugin) ? $plugin : [];
         if ($plugin) {
@@ -90,7 +68,7 @@
             }
         }
     ?>
-
+    <script src="<?= base_url() ?>assets/js/apps/core.js"></script>
     <script src="<?= base_url() ?>assets/js/apps/notification.js"></script>
 </body>
 

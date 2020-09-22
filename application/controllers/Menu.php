@@ -30,7 +30,9 @@ class Menu extends MY_Controller {
 			'js' => ['assets/js/apps/user/manajemen_menu.js']
 		];
 
-		$this->template($header, $body, $footer);
+		$plugins = ['datatables', 'jstree'];
+
+		$this->template($header, $body, $footer, $plugins);
 	}
 }
 

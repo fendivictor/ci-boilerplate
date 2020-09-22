@@ -25,7 +25,9 @@ class User extends MY_Controller {
 			'js' => ['assets/js/apps/user/management_user.js']
 		];
 
-		$this->template($header, $body, $footer);
+		$plugins = ['datatables'];
+
+		$this->template($header, $body, $footer, $plugins);
 	}
 
 	public function change_password()
