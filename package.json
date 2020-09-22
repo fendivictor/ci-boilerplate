@@ -1,0 +1,26 @@
+{
+  "name": "ci-boilerplate",
+  "version": "1.0.0",
+  "description": "What is CodeIgniter\r ###################",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fendivictor/ci-boilerplate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fendivictor/ci-boilerplate/issues"
+  },
+  "homepage": "https://github.com/fendivictor/ci-boilerplate#readme",
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "laravel-mix": "^5.0.5",
+    "webpack": "^4.44.2"
+  }
+}
