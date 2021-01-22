@@ -116,6 +116,20 @@ class Login_model extends CI_Model {
 			->get('tb_user')
 			->row();
 	}
+
+	public function first_page($username)
+	{
+		$sql = $this->db->query("
+			SELECT b.`url`
+			FROM tb_user_menu a
+			INNER JOIN tb_menu b ON a.`id_menu` = b.`id`
+			WHERE a.`username` = ?
+			AND b.`url` <> ''
+			ORDER BY b.`urutan` ASC
+			LIMIT 1 ", [$username])->row();	
+
+		return isset($sql->url) ? $sql->url : 'Main';
+	}
 }
 
 /* End of file Login_model.php */

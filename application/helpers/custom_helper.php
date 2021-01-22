@@ -245,3 +245,10 @@ function generate_qrcode($teks)
 
     return $image_name;
 }
+
+function ws_time($date)
+{
+	$dt = new DateTime($date);
+	$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+	return $dt->format('Y-m-d\TH:i:s.\0\0\0\Z');
+}

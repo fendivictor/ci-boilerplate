@@ -64,7 +64,7 @@ class User_Model extends CI_Model {
 		$password = $password.'&fk_project*123#';
 		$this->db->insert('tb_user', [
 			'username' => $username,
-			'password' => $password,
+			'password' => md5($password),
 			'profile_name' => $profile_name,
 			'language' => $bahasa,
 			'user_insert' => $this->session->userdata('username')

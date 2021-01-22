@@ -49,7 +49,9 @@ class Login extends CI_Controller {
 			);
 			
 			$this->session->set_userdata( $session_data );
-			redirect('Main');
+
+			$first_page = $this->Login_model->first_page($username);
+			redirect($first_page);
 		}
 
 		$this->session->set_flashdata('message', 'Username / password salah');
