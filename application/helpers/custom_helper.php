@@ -36,14 +36,6 @@ function get_last_day_of_month($date)
 	return isset($q->tgl) ? $q->tgl : '';
 }
 
-function format_tgl($date)
-{
-	$date = date_create($date);
-	$date = date_format($date, 'd/m/Y');
-
-	return $date;
-}
-
 function dt_searching($kolom, $keyword)
 {
 	$condition = '';
@@ -69,14 +61,6 @@ function dt_order($kolom, $order_column, $order_mode)
 	return $order;
 }
 
-function to_sql_date($date, $format)
-{
-	$date = date_create_from_format($format, $date);
-	$date = date_format($date, 'Y-m-d');
-
-	return $date;
-}
-
 function custom_date_format($date, $from, $to)
 {
 	if ($date <> '') {
@@ -87,51 +71,20 @@ function custom_date_format($date, $from, $to)
 	return $date;
 }
 
-function sage_date($date)
+function number_to_alphabet($number) 
 {
-	$date = explode('.', $date);
-	$date = $date[0];
-	$date = explode(' ', $date);
-	$date = $date[0];
-
-	return custom_date_format($date, 'Y-m-d', 'd/m/Y');
-}
-
-function barcode_to_lotnumber($barcode)
-{
-	$lot_results = '';
-	$item_code = '';
-	$lotnumber_value = '';
-
-	if (substr($barcode, 0, 5) == ']d291') {
-		$lot_results = substr_replace($barcode, '', 0, 5);
-	} else if (substr($barcode, 0, 2) == '91') {	
-		$lot_results = substr_replace($barcode, '', 0, 2);
-	}
-
-	if ($lot_results <> '') {
-		$item_code = substr($lot_results, 0, 17);
-		$lotnumber_value = substr($lot_results, 19, 35);
-	}
-
-	return [
-		'item_code' => $item_code,
-		'lotnumber' => $lotnumber_value
-	];
-}
-
-function excel_number_to_column_name($number) {
     $numeric = ($number - 1) % 26;
     $letter = chr(65 + $numeric);
     $num2 = intval(($number - 1) / 26);
     if ($num2 > 0) {
-        return excel_number_to_column_name($num2) . $letter;
+        return number_to_alphabet($num2) . $letter;
     } else {
         return $letter;
     }
 }
 
-function remove_special_characters($string) {
+function remove_special_characters($string) 
+{
 	if (strpos($string, '/')) {
 		$string = str_replace('/', '1', $string);
 	}
@@ -151,34 +104,17 @@ function remove_special_characters($string) {
 	return $string;
 }
 
-function kode_to_jenis($kode)
+function replace_invalid_character($string)
 {
-	$data = [
-		'MJ' => 'MEN JAS',
-		'LJ' => 'LADIES JAS',
-		'MP' => 'MEN PANTS',
-		'MV' => 'MEN VEST',
-		'LP' => 'LADIES PANTS',
-		'LS' => 'LADIES SKIRT',
-		'FG' => 'FINISH GOOD'
-	];	
+	$invalidCharacters = array('*', ':', '/', '\\', '?', '[', ']');
 
-	return isset($data[$kode]) ? $data[$kode] : '';
-}
+	for ($i = 0; $i < count($invalidCharacters); $i++) {
+		if (strpos($string, $invalidCharacters[$i])) {
+			$string = str_replace($invalidCharacters[$i], ' ', $string);
+		}
+	}
 
-function kode_jenis($kode)
-{
-	$data = [
-		'MJ' => 'JAS',
-		'LJ' => 'JAS',
-		'MP' => 'PANTS',
-		'MV' => 'VEST',
-		'LP' => 'PANTS',
-		'LS' => 'SKIRT',
-		'FG' => 'FINISH GOOD'
-	];	
-
-	return isset($data[$kode]) ? $data[$kode] : '';
+	return $string;
 }
 
 function tgl_indo($date)
