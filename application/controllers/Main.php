@@ -5,7 +5,7 @@ class Main extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(['Main_Model', 'Project_Model']);
+		$this->load->model(['Project_Model']);
 	}
 
 	public function index()
@@ -23,7 +23,7 @@ class Main extends MY_Controller {
 		];
 
 		$footer = [
-			'js' => ['assets/js/apps/dashboard.js']
+			'js' => ['assets/js/apps/dashboard.js?v=1.0']
 		];
 
 		$plugins = ['datatables'];

@@ -5,7 +5,7 @@ class User extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(['User_Model', 'Main_Model']);
+		$this->load->model(['User_Model']);
 		$this->load->library('form_validation');
 	}
 
@@ -61,7 +61,7 @@ class User extends CI_Controller {
 		$response = [];
 		$dt_table = [];
 
-		$data = $this->User_Model->dt_user();
+		$data = $this->User_Model->find();
 
 		if ($data) {
 			$no = 1;

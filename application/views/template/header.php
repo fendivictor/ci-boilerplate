@@ -15,8 +15,6 @@
     <meta name="theme-color" content="#0f5934">
     <meta name="msapplication-navbutton-color" content="#0f5934">
     <meta name="apple-mobile-web-app-status-bar-style" content="#0f5934">
-    <!-- Google Font: Source Sans Pro -->
-    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/adminlte.min.css">
@@ -53,7 +51,6 @@
             </ul>
 
             <!-- SEARCH FORM -->
-            <!--
             <form class="form-inline ml-3" action="<?= base_url('Search/index'); ?>">
                 <div class="input-group input-group-sm">
                     <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" name="query" value="<?= $this->input->get('query', TRUE); ?>">
@@ -64,7 +61,6 @@
                     </div>
                 </div>
             </form>
-            -->
 
 
             <ul class="navbar-nav ml-auto">

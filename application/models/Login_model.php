@@ -110,11 +110,19 @@ class Login_model extends CI_Model {
 
 	public function get_user_profile($username)
 	{
-		return $this->db->where([
+		$cache = $this->cache->get("$username-profile");
+		if ($cache) {
+			return $cache;
+		}
+
+		$data = $this->db->where([
 				'username' => $username
 			])
 			->get('tb_user')
 			->row();
+
+		$this->cache->save("$username-profile", $data);
+		return $data;
 	}
 
 	public function first_page($username)

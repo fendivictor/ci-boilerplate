@@ -64,7 +64,7 @@
         $js = isset($js) ? $js : [];
         if ($js) {
             for ($i = 0; $i < count($js); $i++) {
-                echo '<script src="'.base_url($js[$i]).'?v='.rand().'"></script>';
+                echo '<script src="'.base_url($js[$i]).'"></script>';
             }
         }
     ?>

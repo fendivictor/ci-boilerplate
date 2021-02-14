@@ -1,11 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class User_Model extends CI_Model {
+class User_Model extends MY_Model {
 
 	public function __construct()
 	{
 		parent::__construct();
-		
+		$this->table = 'tb_user';
 	}
 
 	public function is_valid_password($username, $password)

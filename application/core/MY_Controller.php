@@ -50,7 +50,7 @@ class MY_Controller extends CI_Controller {
 		}
 
 		$header['menu'] = $this->Menu_Model->create_menu();
-		$header['current_menu'] = $current_menu = $this->Menu_Model->current_menu();
+		$header['current_menu'] = $this->Menu_Model->current_menu();
 
 		$username = $this->session->userdata('username');
     	$header['data_user'] = $this->Login_model->get_user_profile($username);

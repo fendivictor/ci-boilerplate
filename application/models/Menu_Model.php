@@ -5,14 +5,19 @@ class Menu_Model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
-		
+		$this->load->driver('cache', ['adapter' => 'apc', 'backup' => 'file']);
 	}
 
 	public function data_menu($parent = 0)
 	{
 		$username = $this->session->userdata('username');
 
-		return $this->db->query("
+		$menu_cache = $this->cache->get("$username-menu");
+		if ($menu_cache) {
+			return $menu_cache;
+		}
+
+		$data = $this->db->query("
 			SELECT a.*, IFNULL(menu.jumlah, 0) AS jumlah
 			FROM tb_menu a
 			LEFT JOIN (
@@ -25,6 +30,10 @@ class Menu_Model extends CI_Model {
 			AND a.status = 1
 			AND c.username = ?
 			ORDER BY a.urutan ASC", [$parent, $username])->result_array();
+
+		$this->cache->save("$username-menu", $data);
+		
+		return $data;
 	}
 
 	public function create_menu()

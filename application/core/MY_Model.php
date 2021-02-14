@@ -8,30 +8,29 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class MY_Model extends CI_Model {
 
-	private $primary_key = 'id';
-	private $table = 'table';
-
 	public function __construct()
 	{
 		parent::__construct();	
+
+		$this->table = 'table';
 	}
 
-	public function create_counter($kolom, $table, $periode, $prefix)
+	public function create_counter($kolom, $periode, $prefix)
 	{
 		$last = $this->db->where(['periode' => $periode])
-					->get($table)
+					->get($this->table)
 					->row();
 
 		$number = 1;
 		if ($last) {
 			$number = $last->$kolom + 1;
-			$this->db->update($table, [
+			$this->db->update($this->table, [
 				$kolom => $number
 			], [
 				'periode' => $periode
 			]);
 		} else {
-			$this->db->insert($table, [
+			$this->db->insert($this->table, [
 				$kolom => 1,
 				'periode' => $periode
 			]);
@@ -49,11 +48,11 @@ class MY_Model extends CI_Model {
 		return $number.$prefix;
 	}
 
-	public function view_data($table, $condition, $multiple = 1)
+	public function find($condition = [], $multiple = true)
 	{
-		$result = $this->db->where($condition)->get($table);
+		$result = $this->db->where($condition)->get($this->table);
 
-		return ($multiple == 1) ? $result->result() : $result->row();
+		return ($multiple) ? $result->result() : $result->row();
 	}
 
 	public function get_time($format = '%Y-%m-%d %H:%i:%s')
@@ -63,10 +62,10 @@ class MY_Model extends CI_Model {
 		return isset($sql->hasil) ? $sql->hasil : '';
 	}
 
-	public function delete_data($table, $condition)
+	public function remove($condition)
 	{
 		$this->db->where($condition)
-			->delete($table);
+			->delete($this->table);
 
 		return $this->db->affected_rows();
 	}
