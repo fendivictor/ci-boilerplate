@@ -22,5 +22,9 @@
     "cross-env": "^7.0.2",
     "laravel-mix": "^5.0.5",
     "webpack": "^4.44.2"
+  },
+  "dependencies": {
+    "knex": "^0.21.17",
+    "mysql": "^2.18.1"
   }
 }
