@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) { exit('No direct script access allowed'); }
 
 class MY_Controller extends CI_Controller {
 
@@ -7,9 +7,21 @@ class MY_Controller extends CI_Controller {
 		parent::__construct();
 		$islogin = $this->Login_model->is_login();
 
-		if ($islogin == FALSE) {
+		if (! $islogin) {
 			redirect(base_url());
 		}
+	}
+
+	public function map_array($data)
+	{
+		$result = [];
+		if ($data) {
+			foreach ($data as $row) {
+				$result[] = $row;
+			}
+		}
+
+		return $result;
 	}
 
 	public function template($header = [], $body = [], $footer = [], $plugins = [])
@@ -23,17 +35,8 @@ class MY_Controller extends CI_Controller {
 				$css = $row['css'];
 				$js = $row['js'];
 
-				if ($css) {
-					foreach ($css as $val) {
-						$arrCss[] = $val;
-					}
-				}
-
-				if ($js) {
-					foreach ($js as $val) {
-						$arrJs[] = $val;
-					}
-				}
+				$arrCss = $this->map_array($css);
+				$arrJs = $this->map_array($js);
 			}
 		}
 

@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) { exit('No direct script access allowed'); }
 
 class Ajax extends CI_Controller {
 
@@ -11,7 +11,7 @@ class Ajax extends CI_Controller {
 		}
 
 		$islogin = $this->Login_model->is_login();
-		if ($islogin == FALSE) {
+		if (! $islogin) {
 			redirect(base_url());
 		}
 

@@ -1,11 +1,6 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) { exit('No direct script access allowed'); }
 
 class Menu extends MY_Controller {
-
-	public function __construct()
-	{
-		parent::__construct();
-	}
 
 	public function index()
 	{
@@ -15,7 +10,7 @@ class Menu extends MY_Controller {
 	public function user()
 	{
 		$page = $this->Login_model->isvalid_page();
-		if ($page == false) {
+		if (! $page) {
 			show_404();
 		}
 		

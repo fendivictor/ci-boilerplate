@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) { exit('No direct script access allowed'); }
 
 class Main extends MY_Controller {
 
@@ -11,7 +11,7 @@ class Main extends MY_Controller {
 	public function index()
 	{
 		$page = $this->Login_model->isvalid_page();
-		if ($page == false) {
+		if (! $page) {
 			show_404();
 		}
 

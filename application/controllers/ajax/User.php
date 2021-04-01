@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) { exit('No direct script access allowed'); }
 
 class User extends CI_Controller {
 
@@ -7,6 +7,8 @@ class User extends CI_Controller {
 		parent::__construct();
 		$this->load->model(['User_Model']);
 		$this->load->library('form_validation');
+
+		$this->required_field = 'Masukkan %s';
 	}
 
 	public function change_password()
@@ -16,9 +18,9 @@ class User extends CI_Controller {
 		$confirm_password = $this->input->post('password_confirm', TRUE);
 		$username = $this->session->userdata('username');
 
-		$this->form_validation->set_rules('password_lama', 'Password Lama', 'required', ['required' => 'Masukkan %s']);
-		$this->form_validation->set_rules('password_baru', 'Password baru', 'required', ['required' => 'Masukkan %s']);
-		$this->form_validation->set_rules('password_confirm', 'Confirm Password', 'required', ['required' => 'Masukkan %s']);
+		$this->form_validation->set_rules('password_lama', 'Password Lama', 'required', ['required' => $this->required_field]);
+		$this->form_validation->set_rules('password_baru', 'Password baru', 'required', ['required' => $this->required_field]);
+		$this->form_validation->set_rules('password_confirm', 'Confirm Password', 'required', ['required' => $this->required_field]);
 
 		$status = 0;
 		$message = 'Ganti password gagal';
@@ -32,7 +34,7 @@ class User extends CI_Controller {
 			}
 
 			$isvalid_current_password = $this->User_Model->is_valid_password($username, $password_lama);
-			if ($isvalid_current_password == false) {
+			if (! $isvalid_current_password) {
 				$message = 'Password Lama salah';
 			}
 
