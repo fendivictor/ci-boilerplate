@@ -1,5 +1,21 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+/* Add new here */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 $lang['menu_dashboard'] = 'Dashboard';
 $lang['menu_add_project'] = 'Add Sample Board';
 $lang['menu_project_list'] = 'Sample Board List';
