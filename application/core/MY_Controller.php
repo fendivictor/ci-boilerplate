@@ -5,9 +5,9 @@ class MY_Controller extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$islogin = $this->Login_model->is_login();
+		$isLoggedIn = $this->Login_model->is_login();
 
-		if (! $islogin) {
+		if (! $isLoggedIn) {
 			redirect(base_url());
 		}
 	}
