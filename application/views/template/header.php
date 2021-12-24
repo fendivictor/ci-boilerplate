@@ -3,7 +3,7 @@
     $profile_name = isset($data_user->profile_name) ? $data_user->profile_name : '';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -11,7 +11,7 @@
     <title><?= lang('dashboard'); ?> <?= ($current_menu <> '') ? ' : '.lang($current_menu) : ' : '.$title; ?></title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/img/'); ?>favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/img/'); ?>logo__1.png">
     <meta name="theme-color" content="#0f5934">
     <meta name="msapplication-navbutton-color" content="#0f5934">
     <meta name="apple-mobile-web-app-status-bar-style" content="#0f5934">
@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/toastr/toastr.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/css/custom-loader.css">
     <style>
         .selected {
             background: aquamarine;
@@ -29,8 +30,10 @@
     <?php 
         $style = isset($style) ? $style : [];
         if ($style) {
-            for ($i = 0; $i < count($style); $i++) {
-                echo '<link rel="stylesheet" href="'.base_url($style[$i]).'">';
+            foreach ($style as $row) {
+                foreach ($row as $val) {
+                    echo '<link rel="stylesheet" href="'.base_url($val).'">' . PHP_EOL;
+                }
             }
         }
     ?>
@@ -49,41 +52,6 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
-
-            <!-- SEARCH FORM -->
-            <form class="form-inline ml-3" action="<?= base_url('Search/index'); ?>">
-                <div class="input-group input-group-sm">
-                    <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" name="query" value="<?= $this->input->get('query', TRUE); ?>">
-                    <div class="input-group-append">
-                        <button class="btn btn-navbar" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-
-            <ul class="navbar-nav ml-auto">
-                <!-- Notifications Dropdown Menu -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false" id="notif-bell">
-                    <i class="far fa-bell fa-lg" style="font-size: 24px;"></i>
-                    <span class="badge badge-danger navbar-badge">
-                        <span class="notif-counter-value">0</span>
-                    </span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">
-                            <span class="notif-counter-value">0</span> Notifications
-                        </span>
-
-                        <div id="notification-result"></div>
-
-                        <div class="dropdown-divider"></div>
-                        <a href="<?= base_url('Notification/') ?>" class="dropdown-item dropdown-footer">See All Notifications</a>
-                    </div>
-                </li>
-            </ul>
         </nav>
         <!-- /.navbar -->
 
@@ -92,7 +60,9 @@
             <!-- Brand Logo -->
             <a href="javascript:;" class="brand-link">
                 <img src="<?php echo base_url() ?>assets/img/fukuryo_favi_fix_0712.png" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Fukuryo</span>
+                <span class="brand-text font-weight-light">
+                    Management Project
+                </span>
             </a>
 
             <!-- Sidebar -->

@@ -1,7 +1,9 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php 
+if ( ! defined('BASEPATH')) {
+	exit('No direct script access allowed');
+}
 
 require('./phpspreadsheet/vendor/autoload.php');
-
 use PhpOffice\PhpSpreadsheet\Helper\Sample;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -13,6 +15,9 @@ class MY_Model extends CI_Model {
 		parent::__construct();	
 
 		$this->table = 'table';
+		$this->select = '*';
+		$this->order = '';
+		$this->join = [];
 	}
 
 	public function create_counter($kolom, $periode, $prefix)
@@ -48,9 +53,38 @@ class MY_Model extends CI_Model {
 		return $number.$prefix;
 	}
 
+	public function selection()
+	{
+		$this->db->select($this->select);
+
+		return $this;
+	}
+
+	public function join_table($join)
+	{
+		if ($join) {
+			foreach ($join as $row) {
+				$this->db->join($row['table'], $row['on'], $row['join']);
+			}
+		}
+
+		return $this;
+	}
+
 	public function find($condition = [], $multiple = true)
 	{
-		$result = $this->db->where($condition)->get($this->table);
+		$this->selection();
+		if ($this->join) {
+			$this->join_table($this->join);	
+		}
+		
+		$this->db->where($condition);
+
+		if ($this->order) {
+			$this->db->order_by($this->order);
+		}
+
+		$result = $this->db->get($this->table);
 
 		return ($multiple) ? $result->result() : $result->row();
 	}
@@ -64,22 +98,35 @@ class MY_Model extends CI_Model {
 
 	public function remove($condition)
 	{
-		$this->db->where($condition)
-			->delete($this->table);
+		$table = explode(' ', $this->table);
+		$this->db->delete($table[0], $condition);
 
 		return $this->db->affected_rows();
 	}
 
-	public function store_data($table, $data, $condition = [], $bulk = false)
+	public function count($condition = [])
+	{
+		$this->selection();
+		if ($this->join) {
+			$this->join_table($this->join);	
+		}
+		
+		$this->db->where($condition);
+		$result = $this->db->get($this->table);
+
+		return $result->num_rows();
+	}
+
+	public function store($data, $condition = [], $bulk = false)
     {   
         $this->db->trans_begin();
         if ($condition) {
-            $this->db->update($table, $data, $condition);
+            $this->db->update($this->table, $data, $condition);
         } else {
             if ($bulk) {
-                $this->db->insert_batch($table, $data);
+                $this->db->insert_batch($this->table, $data);
             } else {
-                $this->db->insert($table, $data);
+                $this->db->insert($this->table, $data);
             }
         }
 
@@ -94,27 +141,59 @@ class MY_Model extends CI_Model {
         }
     }
 
+    public function replace_invalid_character($string)
+	{
+		$invalidCharacters = array('*', ':', '/', '\\', '?', '[', ']');
+
+		for ($i = 0; $i < count($invalidCharacters); $i++) {
+			if (strpos($string, $invalidCharacters[$i])) {
+				$string = str_replace($invalidCharacters[$i], ' ', $string);
+			}
+		}
+
+		return $string;
+	}
+
     public function export($title, $header, $data)
     {
     	$spreadsheet = new Spreadsheet();
+    	$title = $this->replace_invalid_character($title);
 
     	$sheet = $spreadsheet->setActiveSheetIndex(0);
     	$spreadsheet->getActiveSheet()->setTitle($title);
     	$spreadsheet->setActiveSheetIndex(0);
 
-    	foreach ($header as $key => $val) {
-    		$sheet->setCellValueByColumnAndRow($key, 1, $val);
-    	}
+    	$table_border = [
+		    'borders' => [
+		        'allBorders' => [
+		            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
+		        ],
+		    ],
+		];
 
-    	$rows = 3;
+    	foreach ($header as $key => $val) {
+    		$sheet->setCellValueByColumnAndRow($key + 1, 1, $val);
+    	}
 
     	foreach ($data as $key => $val) {
-    		$sheet->setCellValueByColumnAndRow($key, $rows, $val);
+    		if ($data[$key]) {
+    			foreach ($data[$key] as $row => $content) {
+    				$sheet->setCellValueByColumnAndRow($row + 1, $key + 2, $content);
 
-    		$rows++;
+    				if (is_numeric($content) && strlen($content) > 6) {
+    					$sheet->setCellValueExplicitByColumnAndRow($row + 1, $key + 2, $content, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+    				}
+    			}
+    		}
     	}
 
-    	$filename = str_replace(' ', '_', strtolower(replace_invalid_character($title)));
+    	foreach (range(excel_number_to_column_name(1), excel_number_to_column_name(count($header))) as $columnID) {
+			$spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+		}
+
+		$sheet->getStyle('A1:' . excel_number_to_column_name(count($header)) . (count($data) + 1))->applyFromArray($table_border);
+
+    	$filename = str_replace(' ', '_', strtolower($title));
     	// Redirect output to a client’s web browser (Xlsx)
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');
@@ -131,6 +210,14 @@ class MY_Model extends CI_Model {
 		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 		$writer->save('php://output');
 		exit;
+    }
+
+    public function read_excel_file($file)
+    {
+    	$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    	$spreadsheet = $reader->load($file);
+
+    	return $spreadsheet->getActiveSheet()->toArray();
     }
 }
 

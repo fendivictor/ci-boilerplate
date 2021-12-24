@@ -5,9 +5,9 @@ class MY_Controller extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$islogin = $this->Login_model->is_login();
+		$isLoggedIn = $this->Login_model->is_login();
 
-		if (! $islogin) {
+		if (! $isLoggedIn) {
 			redirect(base_url());
 		}
 	}
@@ -27,7 +27,8 @@ class MY_Controller extends CI_Controller {
 	public function template($header = [], $body = [], $footer = [], $plugins = [])
 	{
 		$selected_plugins = $this->plugin_packages($plugins);
-		$arrCss =[];
+
+		$arrCss = [];
 		$arrJs = [];
 
 		if ($selected_plugins) {
@@ -35,8 +36,8 @@ class MY_Controller extends CI_Controller {
 				$css = $row['css'];
 				$js = $row['js'];
 
-				$arrCss = $this->map_array($css);
-				$arrJs = $this->map_array($js);
+				$arrCss[] = $this->map_array($css);
+				$arrJs[] = $this->map_array($js);
 			}
 		}
 
@@ -130,7 +131,34 @@ class MY_Controller extends CI_Controller {
 				'js' => [
 					'assets/plugins/dropzone/min/dropzone.min.js'
 				]
-			]	
+			],
+			'tempusdominus' => [
+				'css' => [
+					'assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css'
+				],
+				'js' => [
+					'assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'
+				]
+			],
+			'select2' => [
+				'css' => [
+					'assets/plugins/select2/css/select2.min.css',
+					'assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'
+				],
+				'js' => [
+					'assets/plugins/select2/js/select2.full.min.js'
+				]
+			],
+			'fullcalendar' => [
+				'css' => [
+					'assets/plugins/fullcalendar/main.css',
+					'assets/plugins/fullcalendar-daygrid/main.css'
+				],
+				'js' => [
+					'assets/plugins/fullcalendar/main.js',
+					'assets/plugins/fullcalendar-daygrid/main.js'
+				]
+			]
 		];
 
 		$selected_plugins = [];

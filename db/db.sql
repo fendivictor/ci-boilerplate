@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate v12.5.1 (64 bit)
-MySQL - 10.4.12-MariaDB : Database - fk_project
+MySQL - 10.4.12-MariaDB : Database - manpro
 *********************************************************************
 */
 
@@ -37,14 +37,10 @@ CREATE TABLE `tb_menu` (
 
 insert  into `tb_menu`(`id`,`label`,`icon`,`url`,`fungsi`,`method`,`parent`,`urutan`,`status`,`insert_at`,`user_insert`,`update_at`,`user_update`) values 
 (1,'menu_dashboard','nav-icon fas fa-tachometer-alt','Main/index','Main','index',0,1,1,'2020-07-09 09:01:15','',NULL,''),
-(2,'menu_add_project','nav-icon fas fa-folder-plus','Project/add','Project','add',0,2,1,'2020-07-09 09:27:16','',NULL,''),
-(3,'menu_project_list','nav-icon fas fa-list','Project/list','Project','list',0,3,1,'2020-07-09 09:34:04','',NULL,''),
 (4,'menu_logout','nav-icon fas fa-lock','','','',0,9999,1,'2020-07-09 11:08:32','',NULL,''),
 (5,'menu_manajemen_menu','nav-icon fas fa-user','Menu/user','Menu','user',0,9998,1,'2020-07-24 13:19:07','',NULL,''),
 (6,'menu_change_password','nav-icon fas fa-exchange-alt','User/change_password','User','change_password',0,9997,1,'2020-07-24 13:29:43','',NULL,''),
-(7,'menu_management_user','nav-icon fas fa-user','User/index','User','index',0,9996,1,'2020-07-24 14:00:41','',NULL,''),
-(8,'menu_privilege','nav-icon fas fa-fingerprint','User/privilege','User','privilege',0,9995,1,'2020-07-27 09:24:58','',NULL,''),
-(9,'menu_finish','nav-icon fas fa-history','Project/history','Project','history',0,4,1,'2020-08-18 09:39:09','',NULL,'');
+(7,'menu_management_user','nav-icon fas fa-user','User/index','User','index',0,9996,1,'2020-07-24 14:00:41','',NULL,'');
 
 /*Table structure for table `tb_menu_setting` */
 
@@ -58,7 +54,7 @@ CREATE TABLE `tb_menu_setting` (
   `insert_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_insert` varchar(60) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_menu_setting` */
 
@@ -86,76 +82,9 @@ insert  into `tb_menu_setting`(`id`,`id_menu`,`tools`,`status`,`insert_at`,`user
 (21,3,'kirim-plan',1,'2020-07-24 10:49:43',''),
 (22,3,'kirim-actual',1,'2020-07-24 10:49:47',''),
 (23,3,'keterangan',1,'2020-07-24 10:49:56',''),
-(24,3,'finish-btn',1,'2020-08-18 08:53:24','');
-
-/*Table structure for table `tb_privilege` */
-
-DROP TABLE IF EXISTS `tb_privilege`;
-
-CREATE TABLE `tb_privilege` (
-  `id` int(20) NOT NULL AUTO_INCREMENT,
-  `id_menu` int(20) DEFAULT 0,
-  `username` varchar(60) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT '',
-  `tools` varchar(60) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT '',
-  `status` int(1) DEFAULT 1,
-  `insert_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `user_insert` varchar(60) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=latin1;
-
-/*Data for the table `tb_privilege` */
-
-insert  into `tb_privilege`(`id`,`id_menu`,`username`,`tools`,`status`,`insert_at`,`user_insert`) values 
-(39,3,'jpg','tec-sheet-plan-kirim',1,'2020-07-27 10:23:25','admin'),
-(40,3,'jpg','tec-sheet-actual-kirim',1,'2020-07-27 10:23:25','admin'),
-(41,3,'jpg','pattern-plan-kirim',1,'2020-07-27 10:23:25','admin'),
-(42,3,'jpg','pattern-actual-kirim',1,'2020-07-27 10:23:25','admin'),
-(43,3,'jpg','fabric-kirim',1,'2020-07-27 10:23:25','admin'),
-(44,3,'jpg','aksesories-kirim',1,'2020-07-27 10:23:25','admin'),
-(62,3,'indo','fabric-kedatangan',1,'2020-07-27 10:25:08','admin'),
-(63,3,'indo','aksesories-kedatangan',1,'2020-07-27 10:25:08','admin'),
-(64,3,'indo','master-code',1,'2020-07-27 10:25:08','admin'),
-(65,3,'indo','line',1,'2020-07-27 10:25:08','admin'),
-(66,3,'indo','persiapan-finish-plan',1,'2020-07-27 10:25:08','admin'),
-(67,3,'indo','persiapan-finish-actual',1,'2020-07-27 10:25:08','admin'),
-(68,3,'indo','cutting-finish-plan',1,'2020-07-27 10:25:08','admin'),
-(69,3,'indo','cutting-finish-actual',1,'2020-07-27 10:25:08','admin'),
-(70,3,'indo','cad-finish-plan',1,'2020-07-27 10:25:08','admin'),
-(71,3,'indo','cad-finish-actual',1,'2020-07-27 10:25:08','admin'),
-(72,3,'indo','sewing-finish-plan',1,'2020-07-27 10:25:08','admin'),
-(73,3,'indo','sewing-finish-actual',1,'2020-07-27 10:25:08','admin'),
-(74,3,'indo','finish-goods-plan',1,'2020-07-27 10:25:08','admin'),
-(75,3,'indo','finish-goods-actual',1,'2020-07-27 10:25:08','admin'),
-(76,3,'indo','kirim-plan',1,'2020-07-27 10:25:08','admin'),
-(77,3,'indo','kirim-actual',1,'2020-07-27 10:25:08','admin'),
-(78,3,'indo','keterangan',1,'2020-07-27 10:25:08','admin'),
-(102,3,'budi','tec-sheet-plan-kirim',1,'2020-08-04 11:27:39','admin'),
-(103,3,'budi','tec-sheet-actual-kirim',1,'2020-08-04 11:27:39','admin'),
-(104,3,'budi','pattern-plan-kirim',1,'2020-08-04 11:27:39','admin'),
-(105,3,'admin','tec-sheet-plan-kirim',1,'2020-08-18 08:54:18','admin'),
-(106,3,'admin','tec-sheet-actual-kirim',1,'2020-08-18 08:54:18','admin'),
-(107,3,'admin','pattern-plan-kirim',1,'2020-08-18 08:54:18','admin'),
-(108,3,'admin','pattern-actual-kirim',1,'2020-08-18 08:54:18','admin'),
-(109,3,'admin','fabric-kirim',1,'2020-08-18 08:54:18','admin'),
-(110,3,'admin','fabric-kedatangan',1,'2020-08-18 08:54:18','admin'),
-(111,3,'admin','aksesories-kirim',1,'2020-08-18 08:54:18','admin'),
-(112,3,'admin','aksesories-kedatangan',1,'2020-08-18 08:54:18','admin'),
-(113,3,'admin','master-code',1,'2020-08-18 08:54:18','admin'),
-(114,3,'admin','line',1,'2020-08-18 08:54:18','admin'),
-(115,3,'admin','persiapan-finish-plan',1,'2020-08-18 08:54:18','admin'),
-(116,3,'admin','persiapan-finish-actual',1,'2020-08-18 08:54:18','admin'),
-(117,3,'admin','cutting-finish-plan',1,'2020-08-18 08:54:18','admin'),
-(118,3,'admin','cutting-finish-actual',1,'2020-08-18 08:54:18','admin'),
-(119,3,'admin','cad-finish-plan',1,'2020-08-18 08:54:18','admin'),
-(120,3,'admin','cad-finish-actual',1,'2020-08-18 08:54:18','admin'),
-(121,3,'admin','sewing-finish-plan',1,'2020-08-18 08:54:18','admin'),
-(122,3,'admin','sewing-finish-actual',1,'2020-08-18 08:54:18','admin'),
-(123,3,'admin','finish-goods-plan',1,'2020-08-18 08:54:18','admin'),
-(124,3,'admin','finish-goods-actual',1,'2020-08-18 08:54:18','admin'),
-(125,3,'admin','kirim-plan',1,'2020-08-18 08:54:18','admin'),
-(126,3,'admin','kirim-actual',1,'2020-08-18 08:54:18','admin'),
-(127,3,'admin','keterangan',1,'2020-08-18 08:54:18','admin'),
-(128,3,'admin','finish-btn',1,'2020-08-18 08:54:18','admin');
+(24,3,'finish-btn',1,'2020-08-18 08:53:24',''),
+(25,3,'edit-btn',1,'2020-09-10 14:32:23',''),
+(26,3,'duplicate-btn',1,'2020-09-10 14:32:29','');
 
 /*Table structure for table `tb_user` */
 
@@ -183,9 +112,9 @@ CREATE TABLE `tb_user` (
 /*Data for the table `tb_user` */
 
 insert  into `tb_user`(`id`,`username`,`password`,`profile_name`,`image`,`phone`,`email`,`session`,`last_login`,`language`,`insert_at`,`user_insert`,`update_at`,`user_update`,`status`) values 
-(1,'admin','7cfa28cde915ea86f0906b343435ce28','Super Admin','','','admin@localhost','b46e0eb6e31bd64097b5297066eb1393','2020-08-21 07:55:42','english','2020-07-09 08:59:23','-','2020-07-27 10:51:09','admin',1),
-(2,'jpg','dface3503e6a0753c0584d2cab38baf6','Fukuryo Japan','','','','556215873949b4f210fa8de499c1a7a0','2020-08-18 15:01:42','japan','2020-07-23 15:03:32','-','2020-07-27 13:14:51','jpg',1),
-(3,'indo','dface3503e6a0753c0584d2cab38baf6','Fukuryo Indo','','','','f8ddd4db9e491be7b304e37e938688a0','2020-08-19 15:46:21','english','2020-07-23 15:04:06','-','2020-07-27 13:15:21','indo',1),
+(1,'admin','7cfa28cde915ea86f0906b343435ce28','Super Admin','','','admin@localhost','99409a7b0bdca4ab6a248349331d249b','2021-08-10 11:17:02','english','2020-07-09 08:59:23','-','2020-07-27 10:51:09','admin',1),
+(2,'jpg','dface3503e6a0753c0584d2cab38baf6','Fukuryo Japan','','','','a098098e371f35932923da5073b9836e','2020-10-20 15:44:31','japan','2020-07-23 15:03:32','-','2020-07-27 13:14:51','jpg',1),
+(3,'indo','dface3503e6a0753c0584d2cab38baf6','Fukuryo Indo','','','','db2a4306a28881837724a43ad67e15b6','2020-09-21 09:44:10','english','2020-07-23 15:04:06','-','2020-07-27 13:15:21','indo',1),
 (4,'budi','410d12f121d35849f16ace2235decf77','budi','','','','06e7cf73dc5a18480c10a785d68be4f1','2020-08-04 11:27:48','japan','2020-08-04 11:25:54','admin','2020-08-04 11:27:08','budi',1);
 
 /*Table structure for table `tb_user_menu` */
