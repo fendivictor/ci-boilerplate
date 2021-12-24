@@ -31,7 +31,7 @@ class Login_model extends CI_Model {
 			if ($cookie <> '') {
 				$cari = $this->db->where([
 					'session' => $cookie
-				])->get('admin')->row();
+				])->get('tb_user')->row();
 
 				if ($cari) {
 					$username = isset($cari->username) ? $cari->username : '';
