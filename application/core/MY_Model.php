@@ -71,14 +71,39 @@ class MY_Model extends CI_Model {
 		return $this;
 	}
 
+	public function define_condition($condition)
+	{
+		$arrayKeys = array_keys($condition);
+
+		if (! $arrayKeys) {
+			return false;
+		}
+
+		foreach ($arrayKeys as $row) {
+			if (is_array($condition[$row])) {
+				$this->db->where_in($row, $condition[$row]);
+			} else {
+				if (strpos($condition[$row], '%') !== false) {
+					$this->db->like($row, str_replace('%', '', $condition[$row]));
+				} else {
+					$this->db->where($row, $condition[$row]);
+				}
+			}
+		}
+
+		return $this;
+	}
+
 	public function find($condition = [], $multiple = true)
 	{
 		$this->selection();
 		if ($this->join) {
 			$this->join_table($this->join);	
 		}
-		
-		$this->db->where($condition);
+
+		if ($condition) {
+			$this->define_condition($condition);
+		}
 
 		if ($this->order) {
 			$this->db->order_by($this->order);
@@ -87,6 +112,25 @@ class MY_Model extends CI_Model {
 		$result = $this->db->get($this->table);
 
 		return ($multiple) ? $result->result() : $result->row();
+	}
+
+	public function dropdown($id, $text, $condition = [], $placeholder = '')
+	{
+		$dropdownResult = [];
+
+		$data = $this->find($condition);
+
+		if ($placeholder != '') {
+			$dropdownResult[null] = $placeholder;
+		}
+
+		if ($data) {
+			foreach ($data as $row => $val) {
+				$dropdownResult[$val->$id] = $val->$text;
+			}
+		}
+
+		return $dropdownResult;
 	}
 
 	public function get_time($format = '%Y-%m-%d %H:%i:%s')
@@ -141,6 +185,34 @@ class MY_Model extends CI_Model {
         }
     }
 
+    public function storeWithReturnId($data, $condition = [])
+    {   
+        $this->db->trans_begin();
+        if ($condition) {
+            $this->db->update($this->table, $data, $condition);
+            $id = $condition['id'];
+        } else {
+            $this->db->insert($this->table, $data);
+            $id = $this->db->insert_id();
+        }
+
+        if ($this->db->trans_status()) {
+            $this->db->trans_commit();
+
+            return [
+            	'status' => true,
+            	'id' => $id
+            ];
+        } else {
+            $this->db->trans_rollback();
+
+            return [
+            	'status' => false,
+            	'id' => $id
+            ];
+        }
+    }
+
     public function replace_invalid_character($string)
 	{
 		$invalidCharacters = array('*', ':', '/', '\\', '?', '[', ']');
@@ -154,6 +226,9 @@ class MY_Model extends CI_Model {
 		return $string;
 	}
 
+    /*
+		Export to Excel File
+	*/
     public function export($title, $header, $data)
     {
     	$spreadsheet = new Spreadsheet();
@@ -179,19 +254,37 @@ class MY_Model extends CI_Model {
     		if ($data[$key]) {
     			foreach ($data[$key] as $row => $content) {
     				$sheet->setCellValueByColumnAndRow($row + 1, $key + 2, $content);
+					
+					if (is_numeric($content) || substr($content, 0, 1) == "=") {
+						$sheet->getStyle(number_to_alphabet($row + 1) . ($key + 2))->getNumberFormat()->setFormatCode('#,##0.00');
+					}	
 
-    				if (is_numeric($content) && strlen($content) > 6) {
-    					$sheet->setCellValueExplicitByColumnAndRow($row + 1, $key + 2, $content, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+						if (validateDate($content, 'Y-m-d')) {
+							$time = gmmktime(0, 0, 0, custom_date_format($content, 'Y-m-d', 'm'), custom_date_format($content, 'Y-m-d', 'd'), custom_date_format($content, 'Y-m-d', 'Y'));
+
+							$sheet->setCellValue(number_to_alphabet($row + 1) . ($key + 2), \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($time));
+							$sheet->getStyle(number_to_alphabet($row + 1) . ($key + 2))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+						}
+
+						if (validateDate($content, 'Y-m-d H:i:s')) {
+							$time = gmmktime(custom_date_format($content, 'Y-m-d H:i:s', 'H'), custom_date_format($content, 'Y-m-d H:i:s', 'i'), custom_date_format($content, 'Y-m-d H:i:s', 's'), custom_date_format($content, 'Y-m-d H:i:s', 'm'), custom_date_format($content, 'Y-m-d H:i:s', 'd'), custom_date_format($content, 'Y-m-d H:i:s', 'Y'));
+
+							$sheet->setCellValue(number_to_alphabet($row + 1) . ($key + 2), \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($time));
+							$sheet->getStyle(number_to_alphabet($row + 1) . ($key + 2))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DATETIME);
+						}
+					
+    				if (substr($content, 0, 1) == "'") {
+    					$sheet->setCellValueExplicitByColumnAndRow($row + 1, $key + 2, substr($content, 1, (strlen($content) - 1)), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
     				}
     			}
     		}
     	}
 
-    	foreach (range(excel_number_to_column_name(1), excel_number_to_column_name(count($header))) as $columnID) {
+    	foreach (range(number_to_alphabet(1), number_to_alphabet(count($header))) as $columnID) {
 			$spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
 		}
 
-		$sheet->getStyle('A1:' . excel_number_to_column_name(count($header)) . (count($data) + 1))->applyFromArray($table_border);
+		$sheet->getStyle('A1:' . number_to_alphabet(count($header)) . (count($data) + 1))->applyFromArray($table_border);
 
     	$filename = str_replace(' ', '_', strtolower($title));
     	// Redirect output to a client’s web browser (Xlsx)
@@ -212,13 +305,51 @@ class MY_Model extends CI_Model {
 		exit;
     }
 
+    /*
+		Read File Excel to Array
+    */
     public function read_excel_file($file)
     {
-    	$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+			if (strtolower(substr($file, -1, 4)) == 'xlsx') {
+				$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+			} else {
+				$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+			}
+    	
     	$spreadsheet = $reader->load($file);
 
     	return $spreadsheet->getActiveSheet()->toArray();
     }
+
+	public function readExcelSheetFile($file)
+	{
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+	    $info = finfo_file($finfo, $file);
+
+	    $ext = 'xls';
+	   	if (in_array($info, ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])) {
+	   		$ext = 'xlsx';
+	   	}
+
+		if ($ext == 'xlsx') {
+			$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+		} else {
+			$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+		}
+		
+		$spreadsheet = $reader->load($file);
+		$jumlahSheet = $spreadsheet->getSheetCount();
+
+		$response = [];
+
+		for ($i = 0; $i < $jumlahSheet; $i++) {
+			$sheet = $spreadsheet->getSheet($i);
+			$response['sheet'][] = $spreadsheet->getSheetNames()[$i];
+			$response['content'][] = $sheet->toArray(null, true, true, true);
+		}
+
+		return $response;
+	}
 }
 
 /* End of file MY_Model.php */
