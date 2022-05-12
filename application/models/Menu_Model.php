@@ -1,21 +1,19 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Menu_Model extends CI_Model {
+class Menu_Model extends MY_Model {
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->driver('cache', ['adapter' => 'apc', 'backup' => 'file']);
+		$this->table = 'tb_menu';
+		$this->select = '*';
+		$this->order = 'tb_menu.urutan asc';
 	}
 
 	public function data_menu($parent = 0)
 	{
 		$username = $this->session->userdata('username');
-
-		$menu_cache = $this->cache->get("$username-menu");
-		if ($menu_cache) {
-			return $menu_cache;
-		}
 
 		$data = $this->db->query("
 			SELECT a.*, IFNULL(menu.jumlah, 0) AS jumlah
@@ -30,8 +28,6 @@ class Menu_Model extends CI_Model {
 			AND a.status = 1
 			AND c.username = ?
 			ORDER BY a.urutan ASC", [$parent, $username])->result_array();
-
-		$this->cache->save("$username-menu", $data);
 		
 		return $data;
 	}
@@ -60,7 +56,7 @@ class Menu_Model extends CI_Model {
 
 				$item = '
 						<li class="nav-item">
-                            <a href="'.$url.'" class="nav-link '.$active.'" '.$logout_button.'>
+                            <a href="'.$url.'" class="nav-link '.$active.'" '.$logout_button.' data-menu="'.lang($row['label']).'">
                                 <i class="'.$row['icon'].'"></i>
                                 <p>
                                     '.lang($row['label']).'
@@ -77,8 +73,8 @@ class Menu_Model extends CI_Model {
 
 				if ($row['jumlah'] > 0) {
 					$child_menu = $this->data_menu($row['id']);        
+	                $child = '';
 	                if ($child_menu) {
-	                	$child = '';
 	                	foreach ($child_menu as $val) {
 	                		$active = ($fungsi == $val['fungsi'] && $method == $val['method']) ? 'active' : '';
 	                		if ($active <> '') {
@@ -89,7 +85,7 @@ class Menu_Model extends CI_Model {
 
 	                		$child .= '
 	                		<li class="nav-item">
-	                            <a href="'.$url.'" class="nav-link '.$active.'">
+	                            <a href="'.$url.'" class="nav-link '.$active.'" data-menu="'.lang($val['label']).'">
 	                                <i class="'.$val['icon'].'"></i>
 	                                <p>'.lang($val['label']).'</p>
 	                            </a>
@@ -174,7 +170,7 @@ class Menu_Model extends CI_Model {
 					'icon' => $val->icon
 				];
 
-				if ($val->selected == 'true') {
+				if ($val->selected == 'true' && $val->jumlah <= 0) {
 					$menu[$row]['state'] = [
 						'selected' => true,
 						'opened' => true
@@ -193,7 +189,7 @@ class Menu_Model extends CI_Model {
 								'icon' => $child_val->icon
 							];
 
-							if ($child_val == 'true') {
+							if ($child_val->selected == 'true') {
 								$child_menu[$child]['state'] = [
 									'selected' => true,
 									'opened' => true
@@ -212,7 +208,7 @@ class Menu_Model extends CI_Model {
 
 	public function dt_user()
 	{
-		return $this->db->query(" SELECT * FROM tb_user WHERE status = 1 ")->result_array();
+		return $this->db->query(" SELECT * FROM tb_user ")->result_array();
 	}
 
 	public function simpan($menu, $username)
