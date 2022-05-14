@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Log in : Project</title>
+    <title>Log in : Admin Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="<?= base_url('assets/img/'); ?>favicon.ico">
     <meta name="theme-color" content="#0f5934">

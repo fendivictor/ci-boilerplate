@@ -27,7 +27,7 @@ const msg = {
 const defaultDeleteConfirmation = {
     title: msg.confirmation,
     text: msg.confirm.delete,
-    icon: "warning",
+    type: "warning",
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -79,7 +79,7 @@ $("#btn-logout").click(function(){
     Swal.fire({
         title: msg.logout.text,
         text: msg.logout.confirm,
-        icon: 'warning',
+        type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
